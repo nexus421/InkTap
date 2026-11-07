@@ -42,9 +42,9 @@ Keep it outside the repository and back it up: without it, later versions cannot
 
 ## Tested devices
 
-| Phone | Transfer time | Orientation |
-|---|---|---|
-| (pending) | | |
+| Phone | Display | Transfer time | Notes |
+|---|---|---|---|
+| Google Pixel 10 Pro | 2.13 inch | about 6 s | Phone held upright (portrait) on the display |
 
 ## Credits
 
