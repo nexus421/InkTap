@@ -1,0 +1,5 @@
+# Keep rules for the release build (AGP 9 picks up every file in src/main/keepRules).
+# The app itself uses no reflection. Rules for libraries go here if the minified build needs them.
+
+# Klogger has an optional SLF4J bridge (MDC reader and service provider). The app does not ship SLF4J.
+-dontwarn org.slf4j.**

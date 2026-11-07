@@ -1,0 +1,44 @@
+# Gradle and build output
+.gradle/
+build/
+.kotlin/
+/captures
+.externalNativeBuild
+.cxx
+!gradle/wrapper/gradle-wrapper.jar
+
+# Machine specific, may contain SDK paths or signing passwords
+local.properties
+
+# Signing material and secrets, never commit these
+*.jks
+*.keystore
+*.p12
+*.pem
+keystore.properties
+signing.properties
+google-services.json
+.env
+.env.*
+
+# Release artifacts
+*.apk
+*.aab
+*.idsig
+mapping.txt
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+out/
+
+# Tooling scratch
+.superpowers/
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db

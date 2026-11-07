@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mode_qr">QR</string>
+    <string name="mode_qr_note">QR + Notiz</string>
+    <string name="mode_qr_content">QR + Inhalt</string>
+    <string name="mode_two_qr">2× QR</string>
+    <string name="mode_text">Text</string>
+    <string name="mode_barcode">Barcode</string>
+    <string name="mode_picture">Bild</string>
+
+    <string name="field_qr">Inhalt (Link, Text, WLAN …)</string>
+    <string name="field_qr_left">Inhalt links</string>
+    <string name="field_qr_right">Inhalt rechts</string>
+    <string name="field_note">Notiz</string>
+    <string name="field_text">Text</string>
+    <string name="field_barcode">Barcode-Wert</string>
+
+    <string name="switch_show_value">Wert unter dem Barcode anzeigen</string>
+    <string name="barcode_detected">Erkannt: %1$s</string>
+    <string name="pick_picture">Bild auswählen</string>
+    <string name="pick_other_picture">Anderes Bild auswählen</string>
+    <string name="switch_crop">Ausfüllen (Ränder abschneiden)</string>
+    <string name="switch_dither">Foto-Modus (Graustufen rastern)</string>
+
+    <string name="menu_more">Weitere Optionen</string>
+    <string name="menu_rotate">Um 180° drehen</string>
+    <string name="menu_test_pattern">Testbild senden</string>
+
+    <string name="preview_description">Vorschau des Displays</string>
+    <string name="hint_empty">Gib unten etwas ein, dann erscheint hier die Vorschau.</string>
+    <string name="hint_pick_picture">Wähle unten ein Bild aus, dann erscheint hier die Vorschau.</string>
+    <string name="hint_test_pattern">Testbild bereit. Halte das Handy ans Display.</string>
+
+    <string name="error_qr_too_long">Zu viel Inhalt für einen QR-Code. Maximal etwa 200 Zeichen.</string>
+    <string name="error_barcode_too_long">Zu lang für einen Barcode. Maximal 17 Zeichen, nur Ziffern 34. Nimm sonst einen QR-Code.</string>
+    <string name="error_barcode_chars">Barcodes können keine Umlaute und Sonderzeichen. Nimm einen QR-Code.</string>
+    <string name="error_text_too_long">Der Text ist zu lang für das Display.</string>
+
+    <string name="nfc_ready">Bereit. Halte die Rückseite deines Handys ans Display.</string>
+    <string name="nfc_writing">Übertrage … Handy nicht bewegen.</string>
+    <string name="nfc_done">Fertig! Du kannst das Handy wegnehmen.</string>
+    <string name="nfc_fix_content">Erst den Inhalt unten korrigieren, dann nochmal dranhalten.</string>
+    <string name="nfc_lost">Verbindung abgebrochen. Halte das Handy ruhig ans Display und versuch es nochmal.</string>
+    <string name="nfc_rejected">Das Display hat nicht mitgespielt. Bitte nochmal dranhalten.</string>
+    <string name="nfc_timeout">Das Display hat das Bild nicht bestätigt. Prüfe es und halte das Handy bei Bedarf nochmal dran.</string>
+    <string name="nfc_off">NFC ist ausgeschaltet.</string>
+    <string name="nfc_open_settings">NFC einschalten</string>
+    <string name="nfc_missing">Dieses Handy hat kein NFC. Die Vorschau funktioniert trotzdem.</string>
+
+    <string name="picture_failed">Das Bild konnte nicht geladen werden.</string>
+</resources>

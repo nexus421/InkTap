@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The inputs can contain WIFI passwords, so they never leave the device. -->
+<full-backup-content>
+    <exclude domain="sharedpref" path="inktap.xml" />
+</full-backup-content>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mode_qr">QR</string>
+    <string name="mode_qr_note">QR + note</string>
+    <string name="mode_qr_content">QR + content</string>
+    <string name="mode_two_qr">2× QR</string>
+    <string name="mode_text">Text</string>
+    <string name="mode_barcode">Barcode</string>
+    <string name="mode_picture">Picture</string>
+
+    <string name="field_qr">Content (link, text, WIFI …)</string>
+    <string name="field_qr_left">Content left</string>
+    <string name="field_qr_right">Content right</string>
+    <string name="field_note">Note</string>
+    <string name="field_text">Text</string>
+    <string name="field_barcode">Barcode value</string>
+
+    <string name="switch_show_value">Show value below the barcode</string>
+    <string name="barcode_detected">Detected: %1$s</string>
+    <string name="pick_picture">Pick a picture</string>
+    <string name="pick_other_picture">Pick another picture</string>
+    <string name="switch_crop">Fill (cut off the edges)</string>
+    <string name="switch_dither">Photo mode (dither grayscale)</string>
+
+    <string name="menu_more">More options</string>
+    <string name="menu_rotate">Rotate by 180°</string>
+    <string name="menu_test_pattern">Send test pattern</string>
+
+    <string name="preview_description">Preview of the display</string>
+    <string name="hint_empty">Enter something below and the preview shows up here.</string>
+    <string name="hint_pick_picture">Pick a picture below and the preview shows up here.</string>
+    <string name="hint_test_pattern">Test pattern ready. Hold your phone to the display.</string>
+
+    <string name="error_qr_too_long">Too much content for a QR code. About 200 characters at most.</string>
+    <string name="error_barcode_too_long">Too long for a barcode. 17 characters at most, digits only 34. Use a QR code instead.</string>
+    <string name="error_barcode_chars">Barcodes cannot hold umlauts or special characters. Use a QR code.</string>
+    <string name="error_text_too_long">The text is too long for the display.</string>
+
+    <string name="nfc_ready">Ready. Hold the back of your phone to the display.</string>
+    <string name="nfc_writing">Transferring … keep your phone still.</string>
+    <string name="nfc_done">Done. You can take your phone away.</string>
+    <string name="nfc_fix_content">Fix the content below first, then hold your phone to the display again.</string>
+    <string name="nfc_lost">Connection lost. Hold your phone steady on the display and try again.</string>
+    <string name="nfc_rejected">The display did not cooperate. Hold your phone to it again.</string>
+    <string name="nfc_timeout">The display did not confirm the picture. Check it and hold your phone to it again if needed.</string>
+    <string name="nfc_off">NFC is switched off.</string>
+    <string name="nfc_open_settings">Turn on NFC</string>
+    <string name="nfc_missing">This phone has no NFC. The preview still works.</string>
+
+    <string name="picture_failed">The picture could not be loaded.</string>
+</resources>
