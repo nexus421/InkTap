@@ -49,7 +49,7 @@ sealed interface Content {
     /** A barcode, optionally with its value printed below. */
     data class Barcode(val value: String, val showValue: Boolean = true) : Content
 
-    /** A picture that is already scaled to the display size, see [fitInto]. */
+    /** A picture that is already scaled to the panel size, see [fitInto]. */
     data class Picture(val image: GrayImage, val dither: Boolean = true) : Content
 
     /**
@@ -59,38 +59,56 @@ sealed interface Content {
     data object TestPattern : Content
 }
 
-/** Outer margin in pixels for text and barcodes. */
-private const val MARGIN = 4
+/**
+ * Sizes that grow with the display. For the 2.13 inch panel they are exactly the values the layouts were
+ * designed and tested with: margin 4, value line 22, test pattern text 40, QR with note uses the full height.
+ */
+private class Metrics(val panel: Panel) {
+    val w = panel.width
+    val h = panel.height
 
-/** Height of the value line below a barcode. */
-private const val BARCODE_TEXT_HEIGHT = 22
+    /** Outer margin for text and barcodes. */
+    val margin = h / 30
 
-/** Renders [content] into a [Display.WIDTH] x [Display.HEIGHT] image. */
-fun render(content: Content, text: TextRasterizer): ResultOf2<MonoImage, ContentError> {
-    val canvas = MonoImage(Display.WIDTH, Display.HEIGHT)
-    val h = Display.HEIGHT
+    /** Height of the value line below a barcode. */
+    val barcodeText = Math.round(h * 0.18f)
+
+    /** Height of the word at the top of the test pattern. */
+    val testPatternText = h * 40 / 122
+
+    /** Side of the QR code next to a text. Wide panels give it the full height, 4:3 panels keep room for the text. */
+    val qrNextToText = minOf(h, w * 55 / 100)
+}
+
+/** Renders [content] into a [Panel.width] x [Panel.height] image for [panel]. */
+fun render(content: Content, text: TextRasterizer, panel: Panel): ResultOf2<MonoImage, ContentError> {
+    val m = Metrics(panel)
+    val canvas = MonoImage(m.w, m.h)
     val error: ContentError? = when (content) {
-        is Content.Qr -> place(renderQr(content.text, h), canvas, (Display.WIDTH - h) / 2, 0)
-        is Content.QrWithNote -> qrAndText(content.text, content.note, canvas, text)
-        is Content.QrWithContent -> qrAndText(content.text, content.text, canvas, text)
-        is Content.TwoQr -> {
-            val half = Display.WIDTH / 2
-            val size = minOf(half, h)
-            place(renderQr(content.left, size), canvas, (half - size) / 2, (h - size) / 2)
-                ?: place(renderQr(content.right, size), canvas, half + (half - size) / 2, (h - size) / 2)
+        is Content.Qr -> {
+            val size = m.h
+            place(renderQr(content.text, size), canvas, (m.w - size) / 2, 0)
         }
-        is Content.Text -> textInto(content.text, canvas, text, MARGIN, MARGIN, Display.WIDTH - 2 * MARGIN, h - 2 * MARGIN)
-        is Content.Barcode -> barcode(content, canvas, text)
+        is Content.QrWithNote -> qrAndText(content.text, content.note, canvas, text, m)
+        is Content.QrWithContent -> qrAndText(content.text, content.text, canvas, text, m)
+        is Content.TwoQr -> {
+            val half = m.w / 2
+            val size = minOf(half, m.h)
+            place(renderQr(content.left, size), canvas, (half - size) / 2, (m.h - size) / 2)
+                ?: place(renderQr(content.right, size), canvas, half + (half - size) / 2, (m.h - size) / 2)
+        }
+        is Content.Text -> textInto(content.text, canvas, text, m.margin, m.margin, m.w - 2 * m.margin, m.h - 2 * m.margin)
+        is Content.Barcode -> barcode(content, canvas, text, m)
         is Content.Picture -> {
             canvas.draw(content.image.toMonoImage(content.dither), 0, 0)
             null
         }
         is Content.TestPattern -> {
-            canvas.fillRect(0, 0, Display.WIDTH, 1)
-            canvas.fillRect(0, h - 1, Display.WIDTH, 1)
-            canvas.fillRect(0, 0, 1, h)
-            canvas.fillRect(Display.WIDTH - 1, 0, 1, h)
-            textInto("OBEN", canvas, text, MARGIN, MARGIN, Display.WIDTH - 2 * MARGIN, 40)
+            canvas.fillRect(0, 0, m.w, 1)
+            canvas.fillRect(0, m.h - 1, m.w, 1)
+            canvas.fillRect(0, 0, 1, m.h)
+            canvas.fillRect(m.w - 1, 0, 1, m.h)
+            textInto("OBEN", canvas, text, m.margin, m.margin, m.w - 2 * m.margin, m.testPatternText)
         }
     }
     return if (error == null) ResultOf2.Success(canvas) else ResultOf2.Failure(error)
@@ -105,11 +123,11 @@ private fun place(result: ResultOf2<MonoImage, ContentError>, canvas: MonoImage,
         is ResultOf2.Failure -> result.value
     }
 
-private fun qrAndText(qr: String, note: String, canvas: MonoImage, text: TextRasterizer): ContentError? {
-    val size = Display.HEIGHT
-    val textX = size + MARGIN
-    return place(renderQr(qr, size), canvas, 0, 0)
-        ?: textInto(note, canvas, text, textX, MARGIN, Display.WIDTH - textX - MARGIN, size - 2 * MARGIN)
+private fun qrAndText(qr: String, note: String, canvas: MonoImage, text: TextRasterizer, m: Metrics): ContentError? {
+    val size = m.qrNextToText
+    val textX = size + m.margin
+    return place(renderQr(qr, size), canvas, 0, (m.h - size) / 2)
+        ?: textInto(note, canvas, text, textX, m.margin, m.w - textX - m.margin, m.h - 2 * m.margin)
 }
 
 private fun textInto(value: String, canvas: MonoImage, text: TextRasterizer, x: Int, y: Int, w: Int, h: Int): ContentError? {
@@ -119,20 +137,20 @@ private fun textInto(value: String, canvas: MonoImage, text: TextRasterizer, x: 
     return null
 }
 
-private fun barcode(content: Content.Barcode, canvas: MonoImage, text: TextRasterizer): ContentError? {
+private fun barcode(content: Content.Barcode, canvas: MonoImage, text: TextRasterizer, m: Metrics): ContentError? {
     val modules = when (val r = encodeBarcode(content.value)) {
         is ResultOf2.Success -> r.value
         is ResultOf2.Failure -> return r.value
     }
     val total = modules.quietLeft + modules.bars.size + modules.quietRight
-    val px = Display.WIDTH / total
+    val px = m.w / total
     if (px < 1) return ContentError.BarcodeTooLong
-    val barHeight = Display.HEIGHT - 2 * MARGIN - if (content.showValue) BARCODE_TEXT_HEIGHT else 0
-    val left = (Display.WIDTH - total * px) / 2 + modules.quietLeft * px
-    modules.bars.forEachIndexed { i, bar -> if (bar) canvas.fillRect(left + i * px, MARGIN, px, barHeight) }
+    val barHeight = m.h - 2 * m.margin - if (content.showValue) m.barcodeText else 0
+    val left = (m.w - total * px) / 2 + modules.quietLeft * px
+    modules.bars.forEachIndexed { i, bar -> if (bar) canvas.fillRect(left + i * px, m.margin, px, barHeight) }
     if (content.showValue.not()) return null
-    val textTop = MARGIN + barHeight
-    return textInto(content.value, canvas, text, MARGIN, textTop, Display.WIDTH - 2 * MARGIN, BARCODE_TEXT_HEIGHT)
+    val textTop = m.margin + barHeight
+    return textInto(content.value, canvas, text, m.margin, textTop, m.w - 2 * m.margin, m.barcodeText)
 }
 
 /**

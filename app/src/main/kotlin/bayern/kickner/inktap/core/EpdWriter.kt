@@ -18,7 +18,8 @@ sealed interface WriteError {
 }
 
 /**
- * Speaks the Waveshare NFC e-paper protocol for the 2.13 inch model (SDK type 1, panel id `4`).
+ * Speaks the Waveshare NFC e-paper protocol for the black and white models in [Panel]. The sequence is the same
+ * for all of them, only the panel id, the packet size and the number of packets differ.
  *
  * Every command is `0xCD <cmd> [args]` sent as a raw ISO 14443-3A frame, the display answers `00 00` for OK.
  * Sequence and delays come from the official Waveshare Android SDK (`NFC.jar`, class `a`) and match the
@@ -37,16 +38,16 @@ class EpdWriter(
 ) {
 
     /**
-     * Writes a frame from [FramePacker.pack] to the display and waits for the refresh.
+     * Writes a frame from [FramePacker.pack] to a display of type [panel] and waits for the refresh.
      *
      * @param onProgress Called with values from `0f` to `1f`.
      */
-    fun write(frame: ByteArray, onProgress: (Float) -> Unit = {}): ResultOfEmpty<WriteError> {
-        require(frame.size == FramePacker.FRAME_BYTES) { "Frame must have ${FramePacker.FRAME_BYTES} bytes" }
+    fun write(frame: ByteArray, panel: Panel, onProgress: (Float) -> Unit = {}): ResultOfEmpty<WriteError> {
+        require(frame.size == panel.frameBytes) { "Frame must have ${panel.frameBytes} bytes for $panel" }
 
         val setup = listOf(
             Step("init", byteArrayOf(0x0D), 0),
-            Step("select panel", byteArrayOf(0x00, PANEL_2IN13), 50),
+            Step("select panel", byteArrayOf(0x00, panel.panelId), 50),
             Step("normal mode", byteArrayOf(0x01), 20),
             Step("config 1", byteArrayOf(0x02), 20),
             Step("power on", byteArrayOf(0x03), 20),
@@ -60,12 +61,12 @@ class EpdWriter(
             if (step.pauseMs > 0) sleep(step.pauseMs)
         }
 
-        for (row in 0 until FramePacker.ROWS) {
-            val payload = byteArrayOf(0x08, FramePacker.ROW_BYTES.toByte()) +
-                frame.copyOfRange(row * FramePacker.ROW_BYTES, (row + 1) * FramePacker.ROW_BYTES)
+        val size = panel.packetBytes
+        for (row in 0 until panel.packets) {
+            val payload = byteArrayOf(0x08, size.toByte()) + frame.copyOfRange(row * size, (row + 1) * size)
             val error = command("data row $row", payload)
             if (error != null) return ResultOfEmpty.Failure(error)
-            onProgress((row + 1) * 0.9f / FramePacker.ROWS)
+            onProgress((row + 1) * 0.9f / panel.packets)
             sleep(2)
         }
 
@@ -74,16 +75,16 @@ class EpdWriter(
         command("refresh", byteArrayOf(0x09))?.let { return ResultOfEmpty.Failure(it) }
         sleep(300)
 
-        waitUntilReady()?.let { return ResultOfEmpty.Failure(it) }
+        waitUntilReady(panel.refreshTimeoutMs)?.let { return ResultOfEmpty.Failure(it) }
         onProgress(0.98f)
         command("power off", byteArrayOf(0x04))?.let { return ResultOfEmpty.Failure(it) }
         onProgress(1f)
         return ResultOfEmpty.Success
     }
 
-    /** Polls `CD 0A` until the display answers `FF 00` (refresh done) or [REFRESH_TIMEOUT_MS] passed. */
-    private fun waitUntilReady(): WriteError? {
-        val deadline = clock() + REFRESH_TIMEOUT_MS
+    /** Polls `CD 0A` until the display answers `FF 00` (refresh done) or [timeoutMs] passed. */
+    private fun waitUntilReady(timeoutMs: Long): WriteError? {
+        val deadline = clock() + timeoutMs
         while (clock() < deadline) {
             val answer = send(byteArrayOf(CMD_PREFIX, 0x0A)).getOrElse {
                 return WriteError.ConnectionLost("wait for refresh", it)
@@ -115,9 +116,7 @@ class EpdWriter(
 
     private companion object {
         const val CMD_PREFIX = 0xCD.toByte()
-        const val PANEL_2IN13: Byte = 4
         const val MAX_ATTEMPTS = 10
-        const val REFRESH_TIMEOUT_MS = 10_000L
         const val POLL_INTERVAL_MS = 100L
     }
 }

@@ -11,13 +11,13 @@ package bayern.kickner.inktap.core
 data class PixelRect(val x: Int, val y: Int, val w: Int, val h: Int)
 
 /**
- * Where a picture of [srcW] x [srcH] goes on the display, keeping its aspect ratio.
+ * Where a picture of [srcW] x [srcH] goes on a display of [dstW] x [dstH], keeping its aspect ratio.
  *
  * @param crop `true` fills the whole display and cuts off what sticks out (good for photos), `false` shows the
  * whole picture with white bars (good for logos and screenshots).
  * @return The target rectangle on the display. With [crop] it may start at negative coordinates.
  */
-fun fitInto(srcW: Int, srcH: Int, crop: Boolean, dstW: Int = Display.WIDTH, dstH: Int = Display.HEIGHT): PixelRect {
+fun fitInto(srcW: Int, srcH: Int, crop: Boolean, dstW: Int, dstH: Int): PixelRect {
     require(srcW > 0 && srcH > 0) { "Picture size must be positive" }
     val scaleX = dstW.toDouble() / srcW
     val scaleY = dstH.toDouble() / srcH

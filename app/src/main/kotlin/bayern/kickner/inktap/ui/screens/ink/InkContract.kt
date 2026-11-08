@@ -5,6 +5,7 @@ import android.nfc.Tag
 import bayern.kickner.inktap.core.BarcodeFormat
 import bayern.kickner.inktap.core.ContentError
 import bayern.kickner.inktap.core.MonoImage
+import bayern.kickner.inktap.core.Panel
 import bayern.kickner.inktap.core.WriteError
 
 /** The seven modes, one chip each. */
@@ -36,6 +37,7 @@ sealed interface NfcStatus {
 
 /** State of the only screen. [preview] is null exactly when [problem] is not null. */
 data class InkState(
+    val panel: Panel = Panel.EPD_2IN13,
     val mode: Mode = Mode.QR,
     val qr: String = "",
     val qr2: String = "",
@@ -59,6 +61,9 @@ data class InkState(
 sealed interface InkAction {
     /** Restores the last inputs, only the first call has an effect. */
     data object Load : InkAction
+
+    /** Switches the display model. The preview is rendered again for its size. */
+    data class SelectPanel(val panel: Panel) : InkAction
 
     /** Switches the layout. */
     data class SelectMode(val mode: Mode) : InkAction

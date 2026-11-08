@@ -1,18 +1,6 @@
 package bayern.kickner.inktap.core
 
 /**
- * Size of the Waveshare 2.13 inch NFC e-paper as the user sees it: landscape, 250 x 122 pixels.
- * Every layout is drawn in this orientation. [FramePacker] turns it into the panel's own memory layout.
- */
-object Display {
-    /** Visible width in pixels (landscape). */
-    const val WIDTH = 250
-
-    /** Visible height in pixels (landscape). */
-    const val HEIGHT = 122
-}
-
-/**
  * A 1-bit image. `true` means black, `false` means white. New images are completely white.
  *
  * @property width Width in pixels.

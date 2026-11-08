@@ -1,8 +1,18 @@
 # InkTap
 
-Android app that writes QR codes, text, barcodes and pictures to the passive
-[Waveshare 2.13 inch NFC-powered e-paper](https://www.waveshare.com/wiki/2.13inch_NFC-Powered_e-Paper_Module)
-over NFC. Hold the phone to the display, done. The display has no battery, power and data come from the phone.
+Android app that writes QR codes, text, barcodes and pictures to the passive Waveshare NFC-powered e-paper
+displays over NFC. Hold the phone to the display, done. The display has no battery, power and data come from the phone.
+
+## Supported displays
+
+| Display | Resolution | Status |
+|---|---|---|
+| [2.13 inch](https://www.waveshare.com/wiki/2.13inch_NFC-Powered_e-Paper_Module) | 250 × 122 | Tested |
+| [4.2 inch](https://www.waveshare.com/wiki/4.2inch_NFC-Powered_e-Paper_Module) | 400 × 300 | Protocol from the Waveshare SDK and Proxmark3, hardware test pending |
+
+All models identify themselves the same way, so the app cannot detect the model. Pick it once in the menu
+(Display). On a new display, send the test pattern first: the frame must be visible on all four edges and
+"OBEN" must be at the top, otherwise switch on "Rotate by 180°".
 
 ## Features
 

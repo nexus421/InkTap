@@ -25,14 +25,21 @@
     <string name="menu_more">More options</string>
     <string name="menu_rotate">Rotate by 180°</string>
     <string name="menu_test_pattern">Send test pattern</string>
+    <string name="menu_display">Display: %1$s″</string>
+    <string name="title_panel">%1$s″</string>
+
+    <string name="dialog_display_title">Which display do you have?</string>
+    <string name="display_option">%1$s″ (%2$d × %3$d)</string>
+    <string name="dialog_display_hint">All displays identify themselves the same way, so you pick the model here once.</string>
+    <string name="dialog_close">Close</string>
 
     <string name="preview_description">Preview of the display</string>
     <string name="hint_empty">Enter something below and the preview shows up here.</string>
     <string name="hint_pick_picture">Pick a picture below and the preview shows up here.</string>
     <string name="hint_test_pattern">Test pattern ready. Hold your phone to the display.</string>
 
-    <string name="error_qr_too_long">Too much content for a QR code. About 200 characters at most.</string>
-    <string name="error_barcode_too_long">Too long for a barcode. 17 characters at most, digits only 34. Use a QR code instead.</string>
+    <string name="error_qr_too_long">Too much content for a QR code on this display. Shorten the content.</string>
+    <string name="error_barcode_too_long">Too long for a barcode on this display. Shorten the value or use a QR code.</string>
     <string name="error_barcode_chars">Barcodes cannot hold umlauts or special characters. Use a QR code.</string>
     <string name="error_text_too_long">The text is too long for the display.</string>
 

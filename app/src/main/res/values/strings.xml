@@ -25,14 +25,21 @@
     <string name="menu_more">Weitere Optionen</string>
     <string name="menu_rotate">Um 180° drehen</string>
     <string name="menu_test_pattern">Testbild senden</string>
+    <string name="menu_display">Display: %1$s″</string>
+    <string name="title_panel">%1$s″</string>
+
+    <string name="dialog_display_title">Welches Display hast du?</string>
+    <string name="display_option">%1$s″ (%2$d × %3$d)</string>
+    <string name="dialog_display_hint">Alle Displays melden sich gleich an, deshalb wählst du das Modell hier einmal aus.</string>
+    <string name="dialog_close">Schließen</string>
 
     <string name="preview_description">Vorschau des Displays</string>
     <string name="hint_empty">Gib unten etwas ein, dann erscheint hier die Vorschau.</string>
     <string name="hint_pick_picture">Wähle unten ein Bild aus, dann erscheint hier die Vorschau.</string>
     <string name="hint_test_pattern">Testbild bereit. Halte das Handy ans Display.</string>
 
-    <string name="error_qr_too_long">Zu viel Inhalt für einen QR-Code. Maximal etwa 200 Zeichen.</string>
-    <string name="error_barcode_too_long">Zu lang für einen Barcode. Maximal 17 Zeichen, nur Ziffern 34. Nimm sonst einen QR-Code.</string>
+    <string name="error_qr_too_long">Zu viel Inhalt für einen QR-Code auf diesem Display. Kürze den Inhalt.</string>
+    <string name="error_barcode_too_long">Zu lang für einen Barcode auf diesem Display. Kürze den Wert oder nimm einen QR-Code.</string>
     <string name="error_barcode_chars">Barcodes können keine Umlaute und Sonderzeichen. Nimm einen QR-Code.</string>
     <string name="error_text_too_long">Der Text ist zu lang für das Display.</string>
 

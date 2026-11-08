@@ -13,6 +13,7 @@ import bayern.kickner.inktap.core.Content
 import bayern.kickner.inktap.core.ContentError
 import bayern.kickner.inktap.core.FramePacker
 import bayern.kickner.inktap.core.GrayImage
+import bayern.kickner.inktap.core.Panel
 import bayern.kickner.inktap.core.encodeBarcode
 import bayern.kickner.inktap.core.render
 import bayern.kickner.inktap.data.InkPrefs
@@ -45,6 +46,7 @@ class InkViewModel : ViewModel() {
     fun onAction(action: InkAction, context: Context) {
         when (action) {
             InkAction.Load -> load(context)
+            is InkAction.SelectPanel -> selectPanel(action.panel, context)
             is InkAction.SelectMode -> edit(context) { copy(mode = action.mode) }
             is InkAction.EditQr -> edit(context) { copy(qr = action.value) }
             is InkAction.EditQr2 -> edit(context) { copy(qr2 = action.value) }
@@ -83,6 +85,12 @@ class InkViewModel : ViewModel() {
         InkPrefs.save(context, state)
     }
 
+    /** A new display size renders everything again. An armed test pattern stays, it is the first thing to send. */
+    private fun selectPanel(panel: Panel, context: Context) {
+        state = state.copy(panel = panel, nfc = state.nfc.reset()).withPreview()
+        InkPrefs.save(context, state)
+    }
+
     private fun nfcChanged(status: NfcStatus) {
         val writing = state.nfc is NfcStatus.Writing
         if (writing.not()) state = state.copy(nfc = status)
@@ -117,13 +125,14 @@ class InkViewModel : ViewModel() {
             return
         }
         if (gate.tryEnter().not()) return
-        val frame = FramePacker.pack(image, state.rotate180)
+        val panel = state.panel
+        val frame = FramePacker.pack(image, panel, state.rotate180)
         state = state.copy(nfc = NfcStatus.Writing(0))
         // Never log the content, a WIFI QR code contains the password.
-        infoLog { "Writing mode=${state.mode} testPattern=${state.testPattern}" }
+        infoLog { "Writing panel=$panel mode=${state.mode} testPattern=${state.testPattern}" }
         viewModelScope.launch(Dispatchers.IO) {
             var lastPercent = 0
-            val result = writeToTag(tag, frame) { progress ->
+            val result = writeToTag(tag, frame, panel) { progress ->
                 val percent = (progress * 100).toInt()
                 if (percent != lastPercent) {
                     lastPercent = percent
@@ -144,15 +153,15 @@ class InkViewModel : ViewModel() {
         }
     }
 
-    /** Renders the preview for the current inputs, see [toContent]. Synchronous, 250 x 122 pixels take milliseconds. */
+    /** Renders the preview for the current inputs, see [toContent]. Synchronous, even 400 x 300 pixels take milliseconds. */
     private fun InkState.withPreview(): InkState {
         val needsPicture = mode == Mode.PICTURE && testPattern.not()
-        val gray = if (needsPicture) picture?.let { toDisplayGray(it, pictureCrop) } else null
+        val gray = if (needsPicture) picture?.let { toDisplayGray(it, pictureCrop, panel) } else null
         val showsBarcode = mode == Mode.BARCODE && testPattern.not()
         val format = if (showsBarcode) (encodeBarcode(barcode) as? ResultOf2.Success)?.value?.format else null
         val content = toContent(gray)
             ?: return copy(preview = null, problem = ContentError.Empty, barcodeFormat = format)
-        return when (val result = render(content, AndroidText)) {
+        return when (val result = render(content, AndroidText, panel)) {
             is ResultOf2.Success -> copy(preview = result.value, problem = null, barcodeFormat = format)
             is ResultOf2.Failure -> copy(preview = null, problem = result.value, barcodeFormat = format)
         }

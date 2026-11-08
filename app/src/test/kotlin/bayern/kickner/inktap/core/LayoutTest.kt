@@ -137,8 +137,8 @@ class LayoutTest {
         assertNotNull(largestFitting(10, 10) { true })
     }
 
-    private fun failure(content: Content): ContentError =
-        assertIs<ResultOf2.Failure<ContentError>>(render(content, AwtText)).value
+    private fun failure(content: Content, panel: Panel = Panel.EPD_2IN13): ContentError =
+        assertIs<ResultOf2.Failure<ContentError>>(render(content, AwtText, panel)).value
 
     private fun blackIn(img: MonoImage, x: Int, y: Int, w: Int, h: Int): Int {
         var n = 0

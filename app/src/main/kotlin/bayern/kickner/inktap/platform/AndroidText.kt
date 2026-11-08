@@ -15,8 +15,11 @@ import bayern.kickner.inktap.core.lumaOf
 /** Smallest font size in pixels that is still readable on the panel. */
 private const val MIN_FONT_PX = 10
 
-/** Largest font size in pixels, a single short word fills the display at about this size. */
+/** Largest font size in pixels on the 2.13 inch panel, a single short word fills it at about this size. */
 private const val MAX_FONT_PX = 96
+
+/** On bigger panels the largest font grows with the box: 85 percent of its height. */
+private const val MAX_FONT_SHARE = 0.85f
 
 /**
  * [TextRasterizer] on top of `StaticLayout`: bold, centered, word wrap, as large as it fits. Anti-aliasing is
@@ -50,7 +53,8 @@ object AndroidText : TextRasterizer {
 
     private fun fittingSize(text: String, paint: TextPaint, width: Int, height: Int, wholeWords: Boolean): Int? {
         val words = text.split(' ', '\n').filter { it.isNotEmpty() }
-        return largestFitting(MIN_FONT_PX, MAX_FONT_PX) { px ->
+        val max = maxOf(MAX_FONT_PX, (height * MAX_FONT_SHARE).toInt())
+        return largestFitting(MIN_FONT_PX, max) { px ->
             paint.textSize = px.toFloat()
             val wordsFit = wholeWords.not() || words.all { paint.measureText(it) <= width }
             wordsFit && layout(text, paint, width).height <= height

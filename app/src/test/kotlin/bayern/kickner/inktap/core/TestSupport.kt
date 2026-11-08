@@ -15,13 +15,24 @@ import kotlin.test.fail
  * What the panel shows for a frame: the inverse of [FramePacker.pack], derived independently from the SDK
  * memory layout (portrait row r, column c is landscape pixel x = 249 - r, y = c, columns 122 to 127 invisible).
  */
-fun displayedImage(frame: ByteArray): MonoImage {
-    val image = MonoImage(Display.WIDTH, Display.HEIGHT)
-    for (row in 0 until 250) for (col in 0 until 122) {
-        val bit = frame[row * 16 + col / 8].toInt() and (0x80 ushr (col % 8))
-        image[249 - row, col] = bit == 0
+fun displayedImage(frame: ByteArray, panel: Panel = Panel.EPD_2IN13): MonoImage = when (panel) {
+    Panel.EPD_2IN13 -> {
+        val image = MonoImage(250, 122)
+        for (row in 0 until 250) for (col in 0 until 122) {
+            val bit = frame[row * 16 + col / 8].toInt() and (0x80 ushr (col % 8))
+            image[249 - row, col] = bit == 0
+        }
+        image
     }
-    return image
+    // SDK and Proxmark3: no rotation, 400 x 300 row by row, 50 bytes per row, MSB is the leftmost pixel.
+    Panel.EPD_4IN2 -> {
+        val image = MonoImage(400, 300)
+        for (y in 0 until 300) for (x in 0 until 400) {
+            val bit = frame[y * 50 + x / 8].toInt() and (0x80 ushr (x % 8))
+            image[x, y] = bit == 0
+        }
+        image
+    }
 }
 
 /**
@@ -43,12 +54,12 @@ fun decode(image: MonoImage, x: Int = 0, y: Int = 0, w: Int = image.width, h: In
 }
 
 /** The whole chain the app uses: layout, frame, what the panel shows. */
-fun renderToPanel(content: Content, rotate180: Boolean = false): MonoImage {
-    val image = when (val r = render(content, AwtText)) {
+fun renderToPanel(content: Content, rotate180: Boolean = false, panel: Panel = Panel.EPD_2IN13): MonoImage {
+    val image = when (val r = render(content, AwtText, panel)) {
         is ResultOf2.Success -> r.value
         is ResultOf2.Failure -> fail("Render failed: ${r.value}")
     }
-    return displayedImage(FramePacker.pack(image, rotate180))
+    return displayedImage(FramePacker.pack(image, panel, rotate180), panel)
 }
 
 /** Test stand-in for the Android `StaticLayout` rasterizer: AWT, bold sans serif, largest size that fits. */

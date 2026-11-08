@@ -2,6 +2,7 @@ package bayern.kickner.inktap.data
 
 import android.content.Context
 import androidx.core.content.edit
+import bayern.kickner.inktap.core.Panel
 import bayern.kickner.inktap.ui.screens.ink.InkState
 import bayern.kickner.inktap.ui.screens.ink.Mode
 
@@ -11,6 +12,7 @@ import bayern.kickner.inktap.ui.screens.ink.Mode
  */
 object InkPrefs {
     private const val FILE = "inktap"
+    private const val PANEL = "panel"
     private const val MODE = "mode"
     private const val QR = "qr"
     private const val QR2 = "qr2"
@@ -22,12 +24,13 @@ object InkPrefs {
     private const val PICTURE_DITHER = "pictureDither"
     private const val ROTATE_180 = "rotate180"
 
-    /** Reads the stored inputs into a fresh [InkState]. Unknown modes fall back to [Mode.QR]. */
+    /** Reads the stored inputs into a fresh [InkState]. Unknown modes fall back to [Mode.QR], unknown panels to 2.13 inch. */
     fun load(context: Context): InkState {
         val prefs = context.getSharedPreferences(FILE, Context.MODE_PRIVATE)
         val defaults = InkState()
         val modeName = prefs.getString(MODE, null)
         return defaults.copy(
+            panel = Panel.fromName(prefs.getString(PANEL, null)),
             mode = modeName?.let { name -> runCatching { Mode.valueOf(name) }.getOrNull() } ?: Mode.QR,
             qr = prefs.getString(QR, null) ?: defaults.qr,
             qr2 = prefs.getString(QR2, null) ?: defaults.qr2,
@@ -44,6 +47,7 @@ object InkPrefs {
     /** Stores the inputs of [state]. Asynchronous, safe to call on every keystroke. */
     fun save(context: Context, state: InkState) {
         context.getSharedPreferences(FILE, Context.MODE_PRIVATE).edit {
+            putString(PANEL, state.panel.name)
             putString(MODE, state.mode.name)
             putString(QR, state.qr)
             putString(QR2, state.qr2)

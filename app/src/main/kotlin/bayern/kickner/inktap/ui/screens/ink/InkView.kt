@@ -17,9 +17,12 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -33,6 +36,7 @@ import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Nfc
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
@@ -46,9 +50,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -67,6 +73,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -74,7 +81,7 @@ import bayern.kickner.inktap.R
 import bayern.kickner.inktap.core.BarcodeFormat
 import bayern.kickner.inktap.core.Content
 import bayern.kickner.inktap.core.ContentError
-import bayern.kickner.inktap.core.Display
+import bayern.kickner.inktap.core.Panel
 import bayern.kickner.inktap.core.MonoImage
 import bayern.kickner.inktap.core.WriteError
 import bayern.kickner.inktap.core.render
@@ -83,6 +90,9 @@ import kotnexlib.ResultOf2
 
 /** Paper color of the e-paper preview, the same as [MonoImage.toArgb] uses. */
 private val Paper = Color(0xFFF4F4F0)
+
+/** Highest the preview may get. The 2.13 inch preview stays below it on phones, the 4.2 inch one is capped. */
+private val PREVIEW_MAX_HEIGHT = 200.dp
 
 /**
  * The only screen. The header with preview and NFC status stays in place, only the mode chips and input fields
@@ -103,8 +113,18 @@ fun InkView(state: InkState, onAction: (InkAction) -> Unit, onOpenNfcSettings: (
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.app_name)) },
-                actions = { OverflowMenu(state.rotate180, onAction) },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(stringResource(R.string.app_name))
+                        Text(
+                            stringResource(R.string.title_panel, state.panel.inches),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 8.dp),
+                        )
+                    }
+                },
+                actions = { OverflowMenu(state.panel, state.rotate180, onAction) },
             )
         },
     ) { padding ->
@@ -132,13 +152,31 @@ fun InkView(state: InkState, onAction: (InkAction) -> Unit, onOpenNfcSettings: (
 }
 
 @Composable
-private fun OverflowMenu(rotate180: Boolean, onAction: (InkAction) -> Unit) {
+private fun OverflowMenu(panel: Panel, rotate180: Boolean, onAction: (InkAction) -> Unit) {
     var open by remember { mutableStateOf(false) }
+    var choosePanel by remember { mutableStateOf(false) }
+    if (choosePanel) {
+        PanelDialog(
+            selected = panel,
+            onSelect = {
+                choosePanel = false
+                onAction(InkAction.SelectPanel(it))
+            },
+            onDismiss = { choosePanel = false },
+        )
+    }
     Box {
         IconButton(onClick = { open = true }) {
             Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.menu_more))
         }
         DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.menu_display, panel.inches)) },
+                onClick = {
+                    open = false
+                    choosePanel = true
+                },
+            )
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.menu_rotate)) },
                 trailingIcon = { Checkbox(checked = rotate180, onCheckedChange = null) },
@@ -153,6 +191,41 @@ private fun OverflowMenu(rotate180: Boolean, onAction: (InkAction) -> Unit) {
             )
         }
     }
+}
+
+/** All displays answer with the same UID, so the user picks the model once. The choice is stored. */
+@Composable
+private fun PanelDialog(selected: Panel, onSelect: (Panel) -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.dialog_display_title)) },
+        text = {
+            Column(Modifier.selectableGroup()) {
+                Panel.entries.forEach { panel ->
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .selectable(selected = panel == selected, role = Role.RadioButton, onClick = { onSelect(panel) })
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        RadioButton(selected = panel == selected, onClick = null)
+                        Spacer(Modifier.size(12.dp))
+                        Text(stringResource(R.string.display_option, panel.inches, panel.width, panel.height))
+                    }
+                }
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    stringResource(R.string.dialog_display_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.dialog_close)) }
+        },
+    )
 }
 
 /** Preview plus status: the part that never scrolls. */
@@ -176,10 +249,16 @@ private fun Header(state: InkState, onOpenNfcSettings: () -> Unit, modifier: Mod
 @Composable
 private fun Preview(state: InkState) {
     val shape = RoundedCornerShape(6.dp)
+    // Capped height: a 4:3 panel would otherwise push the input fields away while the keyboard is open.
     val frame = Modifier
-        .fillMaxWidth()
-        .aspectRatio(Display.WIDTH.toFloat() / Display.HEIGHT)
+        .heightIn(max = PREVIEW_MAX_HEIGHT)
+        .aspectRatio(state.panel.width.toFloat() / state.panel.height)
         .clip(shape)
+    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { PreviewContent(state, frame) }
+}
+
+@Composable
+private fun PreviewContent(state: InkState, frame: Modifier) {
     val preview = state.preview
     if (preview != null) {
         val bitmap = remember(preview) {
@@ -379,7 +458,8 @@ private fun SwitchRow(label: Int, checked: Boolean, onChange: (Boolean) -> Unit)
     }
 }
 
-private fun previewOf(content: Content): MonoImage? = (render(content, AndroidText) as? ResultOf2.Success)?.value
+private fun previewOf(content: Content, panel: Panel = Panel.EPD_2IN13): MonoImage? =
+    (render(content, AndroidText, panel) as? ResultOf2.Success)?.value
 
 @Preview(showBackground = true, heightDp = 720)
 @Composable
@@ -398,6 +478,18 @@ private fun WritingPreview() = MaterialTheme {
     val content = Content.Text("Bin gleich zurück!")
     InkView(
         InkState(mode = Mode.TEXT, text = content.text, preview = previewOf(content), problem = null, nfc = NfcStatus.Writing(60)),
+        {},
+        {},
+    )
+}
+
+@Preview(showBackground = true, heightDp = 720)
+@Composable
+private fun FourTwoPreview() = MaterialTheme {
+    val content = Content.QrWithNote("WIFI:T:WPA;S:Gast;P:geheim;;", "Gäste-WLAN scannen")
+    val panel = Panel.EPD_4IN2
+    InkView(
+        InkState(panel = panel, mode = Mode.QR_NOTE, qr = content.text, note = content.note, preview = previewOf(content, panel), problem = null),
         {},
         {},
     )
