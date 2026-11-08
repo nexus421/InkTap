@@ -10,8 +10,8 @@ displays over NFC. Hold the phone to the display, done. The display has no batte
 | [2.13 inch](https://www.waveshare.com/wiki/2.13inch_NFC-Powered_e-Paper_Module) | 250 × 122 | Tested |
 | [4.2 inch](https://www.waveshare.com/wiki/4.2inch_NFC-Powered_e-Paper_Module) | 400 × 300 | Protocol from the Waveshare SDK and Proxmark3, hardware test pending |
 
-All models identify themselves the same way, so the app cannot detect the model. Pick it once in the menu
-(Display). On a new display, send the test pattern first: the frame must be visible on all four edges and
+All models identify themselves the same way, so the app cannot detect the model. Pick it with the switch in
+the top bar. On a new display, send the test pattern first: the frame must be visible on all four edges and
 "OBEN" must be at the top, otherwise switch on "Rotate by 180°".
 
 ## Features

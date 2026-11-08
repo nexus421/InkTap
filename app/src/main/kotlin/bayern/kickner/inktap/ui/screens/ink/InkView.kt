@@ -21,8 +21,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -36,7 +34,6 @@ import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Nfc
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
@@ -50,11 +47,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -73,8 +71,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import bayern.kickner.inktap.R
@@ -113,18 +113,11 @@ fun InkView(state: InkState, onAction: (InkAction) -> Unit, onOpenNfcSettings: (
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(stringResource(R.string.app_name))
-                        Text(
-                            stringResource(R.string.title_panel, state.panel.inches),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(start = 8.dp),
-                        )
-                    }
+                title = { Text(stringResource(R.string.app_name), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                actions = {
+                    PanelSwitch(state.panel) { onAction(InkAction.SelectPanel(it)) }
+                    OverflowMenu(state.rotate180, onAction)
                 },
-                actions = { OverflowMenu(state.panel, state.rotate180, onAction) },
             )
         },
     ) { padding ->
@@ -152,31 +145,13 @@ fun InkView(state: InkState, onAction: (InkAction) -> Unit, onOpenNfcSettings: (
 }
 
 @Composable
-private fun OverflowMenu(panel: Panel, rotate180: Boolean, onAction: (InkAction) -> Unit) {
+private fun OverflowMenu(rotate180: Boolean, onAction: (InkAction) -> Unit) {
     var open by remember { mutableStateOf(false) }
-    var choosePanel by remember { mutableStateOf(false) }
-    if (choosePanel) {
-        PanelDialog(
-            selected = panel,
-            onSelect = {
-                choosePanel = false
-                onAction(InkAction.SelectPanel(it))
-            },
-            onDismiss = { choosePanel = false },
-        )
-    }
     Box {
         IconButton(onClick = { open = true }) {
             Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.menu_more))
         }
         DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.menu_display, panel.inches)) },
-                onClick = {
-                    open = false
-                    choosePanel = true
-                },
-            )
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.menu_rotate)) },
                 trailingIcon = { Checkbox(checked = rotate180, onCheckedChange = null) },
@@ -193,39 +168,30 @@ private fun OverflowMenu(panel: Panel, rotate180: Boolean, onAction: (InkAction)
     }
 }
 
-/** All displays answer with the same UID, so the user picks the model once. The choice is stored. */
+/**
+ * One tap switches the display model. All displays answer with the same UID, so the app cannot detect the model.
+ * No check icon, it would make the buttons too wide for the top bar.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PanelDialog(selected: Panel, onSelect: (Panel) -> Unit, onDismiss: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.dialog_display_title)) },
-        text = {
-            Column(Modifier.selectableGroup()) {
-                Panel.entries.forEach { panel ->
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .selectable(selected = panel == selected, role = Role.RadioButton, onClick = { onSelect(panel) })
-                            .padding(vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        RadioButton(selected = panel == selected, onClick = null)
-                        Spacer(Modifier.size(12.dp))
-                        Text(stringResource(R.string.display_option, panel.inches, panel.width, panel.height))
-                    }
-                }
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    stringResource(R.string.dialog_display_hint),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.dialog_close)) }
-        },
-    )
+private fun PanelSwitch(selected: Panel, onSelect: (Panel) -> Unit) {
+    val panels = Panel.entries
+    val description = stringResource(R.string.panel_switch_description)
+    SingleChoiceSegmentedButtonRow(
+        Modifier
+            .padding(end = 4.dp)
+            .semantics { contentDescription = description },
+    ) {
+        panels.forEachIndexed { index, panel ->
+            SegmentedButton(
+                selected = panel == selected,
+                onClick = { onSelect(panel) },
+                shape = SegmentedButtonDefaults.itemShape(index = index, count = panels.size),
+                icon = {},
+                label = { Text(stringResource(R.string.panel_label, panel.inches), maxLines = 1) },
+            )
+        }
+    }
 }
 
 /** Preview plus status: the part that never scrolls. */

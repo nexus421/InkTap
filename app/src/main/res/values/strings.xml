@@ -24,14 +24,9 @@
 
     <string name="menu_more">Weitere Optionen</string>
     <string name="menu_rotate">Um 180° drehen</string>
+    <string name="panel_label">%1$s″</string>
+    <string name="panel_switch_description">Display-Größe</string>
     <string name="menu_test_pattern">Testbild senden</string>
-    <string name="menu_display">Display: %1$s″</string>
-    <string name="title_panel">%1$s″</string>
-
-    <string name="dialog_display_title">Welches Display hast du?</string>
-    <string name="display_option">%1$s″ (%2$d × %3$d)</string>
-    <string name="dialog_display_hint">Alle Displays melden sich gleich an, deshalb wählst du das Modell hier einmal aus.</string>
-    <string name="dialog_close">Schließen</string>
 
     <string name="preview_description">Vorschau des Displays</string>
     <string name="hint_empty">Gib unten etwas ein, dann erscheint hier die Vorschau.</string>
