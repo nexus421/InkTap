@@ -113,7 +113,7 @@ fun InkView(state: InkState, onAction: (InkAction) -> Unit, onOpenNfcSettings: (
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.app_name), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                title = { Text(stringResource(R.string.inktap_name), maxLines = 1, overflow = TextOverflow.Ellipsis) },
                 actions = {
                     PanelSwitch(state.panel) { onAction(InkAction.SelectPanel(it)) }
                     OverflowMenu(state.rotate180, onAction)

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="inktap_name" translatable="false">InkTap</string>
     <string name="mode_qr">QR</string>
     <string name="mode_qr_note">QR + note</string>
     <string name="mode_qr_content">QR + content</string>

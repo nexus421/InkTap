@@ -1,10 +1,10 @@
-package bayern.kickner.inktap
+package bayern.kickner.appothek
 
 import android.app.Application
 import bayern.kickner.klogger.KLogger
 
 /** Application entry point. Sets up logging once for the whole process. */
-class InkTapApp : Application() {
+class AppothekApp : Application() {
     override fun onCreate() {
         super.onCreate()
         KLogger.configure {

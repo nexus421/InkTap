@@ -7,15 +7,16 @@ plugins {
 val appVersionName: String = providers.gradleProperty("versionName").getOrElse("1.0.0")
 
 // Release signing comes from the environment only, never from files in this repository.
-// Without INKTAP_KEYSTORE_FILE the release build stays unsigned (fine for local R8 checks).
-val releaseKeystore: String? = System.getenv("INKTAP_KEYSTORE_FILE")
+// Without APPOTHEK_KEYSTORE_FILE the release build stays unsigned (fine for local R8 checks).
+val releaseKeystore: String? = System.getenv("APPOTHEK_KEYSTORE_FILE")
 
 android {
-    namespace = "bayern.kickner.inktap"
+    namespace = "bayern.kickner.appothek"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "bayern.kickner.inktap"
+        // The Play Store identity of the former Buchstabierer app. Never change it.
+        applicationId = "bayern.kickner.buchstabierer"
         minSdk = 35
         targetSdk = 37
         versionName = appVersionName
@@ -29,9 +30,9 @@ android {
         if (releaseKeystore != null) {
             create("release") {
                 storeFile = file(releaseKeystore)
-                storePassword = System.getenv("INKTAP_KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("INKTAP_KEY_ALIAS")
-                keyPassword = System.getenv("INKTAP_KEY_PASSWORD")
+                storePassword = System.getenv("APPOTHEK_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("APPOTHEK_KEY_ALIAS")
+                keyPassword = System.getenv("APPOTHEK_KEY_PASSWORD")
             }
         }
     }
@@ -39,12 +40,12 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
-            resValue("string", "app_name", "InkTap Debug")
+            resValue("string", "app_name", "Appothek Debug")
         }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            resValue("string", "app_name", "InkTap")
+            resValue("string", "app_name", "Appothek")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
             signingConfig = signingConfigs.findByName("release")
         }
@@ -61,11 +62,11 @@ android {
         resValues = true
     }
 
-    // Unit tests render text with AWT, see TestSupport.kt.
-    testOptions.unitTests.all { it.systemProperty("java.awt.headless", "true") }
 }
 
 dependencies {
+    implementation(project(":core"))
+    implementation(project(":tools:inktap"))
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.material3)
@@ -75,11 +76,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.qrcode.kotlin)
-    implementation(libs.kotnexlib)
     implementation(libs.klogger)
 
     testImplementation(libs.kotlin.test.junit)
     testImplementation(libs.junit)
-    testImplementation(libs.zxing.core)
 }

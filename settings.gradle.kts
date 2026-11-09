@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -28,5 +29,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "InkTap"
+rootProject.name = "Appothek"
 include(":app")
+include(":core")
+include(":tools:inktap")

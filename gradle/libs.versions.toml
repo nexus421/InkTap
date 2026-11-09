@@ -7,11 +7,15 @@ lifecycle = "2.11.0"
 coreKtx = "1.19.1"
 qrcodeKotlin = "4.5.0"
 kotnexlib = "4.4.1"
+datastore = "1.2.1"
+composeLoadingDialog = "3.0.0"
 klogger = "0.5.0"
 zxing = "3.5.4"
 junit = "4.13.2"
 
 [libraries]
+android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+compose-compiler-gradle-plugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -27,8 +31,11 @@ kotnexlib = { group = "bayern.kickner", name = "KotNexLib", version.ref = "kotne
 klogger = { group = "bayern.kickner", name = "Klogger", version.ref = "klogger" }
 kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+compose-loading-dialog = { group = "bayern.kickner", name = "ComposeLoadingDialog", version.ref = "composeLoadingDialog" }
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
