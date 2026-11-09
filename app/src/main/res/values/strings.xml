@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Einstellungen</string>
+    <string name="design">Design</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="own_icons">Eigene Symbole</string>
+    <string name="own_icon_add">Als eigenes Symbol anzeigen</string>
+    <string name="own_icon_remove">Eigenes Symbol entfernen</string>
+    <string name="about">Über die Appothek</string>
+    <string name="version">Version %1$s</string>
+    <string name="licences">Lizenzen</string>
+    <string name="back">Zurück</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="migration_title">Der %1$s wohnt jetzt in der Appothek</string>
+    <string name="migration_text">Soll er trotzdem ein eigenes Symbol auf dem Startbildschirm bekommen?</string>
+</resources>

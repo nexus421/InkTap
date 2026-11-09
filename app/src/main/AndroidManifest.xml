@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.NFC" />
+    <!-- Only InkTap needs NFC. Without it the app still works and InkTap is greyed out. -->
     <uses-feature android:name="android.hardware.nfc" android:required="false" />
 
     <application
@@ -15,13 +16,69 @@
         android:theme="@style/Theme.Appothek">
 
         <activity
-            android:name="bayern.kickner.inktap.MainActivity"
+            android:name="bayern.kickner.appothek.MainActivity"
+            android:exported="false" />
+
+        <!--
+            The launcher entry of the Appothek. Its name is that of the MainActivity of Buchstabierer 7.0, so the
+            homescreen icon of users who update from the Play Store keeps working. Never rename it.
+        -->
+        <activity-alias
+            android:name="bayern.kickner.buchstabierer.MainActivity"
             android:exported="true"
-            android:launchMode="singleTask">
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:targetActivity="bayern.kickner.appothek.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-alias>
+
+        <!--
+            Every tool: an activity with its own task (so it behaves like its own app) and a launcher alias the user
+            can switch on. Shortcuts point at the activity, a disabled alias cannot be started.
+            Names must match LauncherEntries.
+        -->
+        <activity
+            android:name="bayern.kickner.appothek.tool.BuchstabiererActivity"
+            android:exported="false"
+            android:icon="@mipmap/ic_launcher_buchstabierer"
+            android:label="@string/buchstabierer_name"
+            android:taskAffinity="${applicationId}.tool.buchstabierer" />
+
+        <activity-alias
+            android:name="bayern.kickner.appothek.launcher.Buchstabierer"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_buchstabierer"
+            android:label="@string/buchstabierer_name"
+            android:targetActivity="bayern.kickner.appothek.tool.BuchstabiererActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity
+            android:name="bayern.kickner.appothek.tool.InkTapActivity"
+            android:exported="false"
+            android:icon="@mipmap/ic_launcher_inktap"
+            android:label="@string/inktap_name"
+            android:launchMode="singleTask"
+            android:taskAffinity="${applicationId}.tool.inktap" />
+
+        <activity-alias
+            android:name="bayern.kickner.appothek.launcher.InkTap"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_inktap"
+            android:label="@string/inktap_name"
+            android:targetActivity="bayern.kickner.appothek.tool.InkTapActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
     </application>
 </manifest>

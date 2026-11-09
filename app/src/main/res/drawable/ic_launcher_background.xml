@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Placeholder Appothek icon until the real one is designed on the device. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <solid android:color="#F4F4F0" />
+    <gradient android:angle="315" android:startColor="#3D4A63" android:endColor="#1F2738" />
 </shape>

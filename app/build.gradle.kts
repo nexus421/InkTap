@@ -67,6 +67,8 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":tools:inktap"))
+    implementation(project(":tools:buchstabierer"))
+    implementation(libs.androidx.datastore.preferences)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.material3)
