@@ -41,11 +41,12 @@ fun ToolCard(
     tool: Tool,
     dark: Boolean,
     available: Boolean,
-    ownIcon: Boolean,
+    isOwnIcon: () -> Boolean,
     onClick: () -> Unit,
     onToggleOwnIcon: () -> Unit,
 ) {
     var menu by remember { mutableStateOf(false) }
+    var ownIcon by remember { mutableStateOf(false) }
     Box {
         Box(
             Modifier
@@ -54,7 +55,12 @@ fun ToolCard(
                 .alpha(if (available) 1f else 0.4f)
                 .clip(RoundedCornerShape(24.dp))
                 .background(tool.colors.gradient(dark))
-                .combinedClickable(onClick = onClick, onLongClick = { if (available) menu = true }),
+                .combinedClickable(onClick = onClick, onLongClick = {
+                    if (available) {
+                        ownIcon = isOwnIcon()
+                        menu = true
+                    }
+                }),
         ) {
             Image(
                 painter = painterResource(tool.motifRes),

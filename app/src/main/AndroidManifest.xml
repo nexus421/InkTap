@@ -42,6 +42,7 @@
         -->
         <activity
             android:name="bayern.kickner.appothek.tool.BuchstabiererActivity"
+            android:launchMode="singleTask"
             android:exported="false"
             android:icon="@mipmap/ic_launcher_buchstabierer"
             android:label="@string/buchstabierer_name"

@@ -51,6 +51,8 @@ class LauncherEntriesTest {
         toolIds.forEach { id ->
             val activity = elements("activity").single { it.attr("name") == LauncherEntries.activityClassName(id) }
             assertTrue(activity.attr("taskAffinity").endsWith(".tool.$id"), "taskAffinity of $id")
+            // Alias, shortcut and pinned icon must all reach the same single instance.
+            assertEquals("singleTask", activity.attr("launchMode"), "launchMode of $id")
             val alias = elements("activity-alias").single { it.attr("name") == LauncherEntries.aliasClassName(id) }
             assertEquals(LauncherEntries.activityClassName(id), alias.attr("targetActivity"))
             assertEquals("false", alias.attr("enabled"), "alias of $id must start hidden")

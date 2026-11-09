@@ -33,6 +33,10 @@ jobs:
           fi
           echo "name=$VERSION" >> "$GITHUB_OUTPUT"
 
+      # Tests run before any secret is in the job, so test code never sees the signing material.
+      - name: Test
+        run: ./gradlew test
+
       - name: Restore signing keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.APPOTHEK_KEYSTORE_BASE64 }}
@@ -43,13 +47,13 @@ jobs:
           fi
           echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/appothek.jks"
 
-      - name: Test and build release APK and AAB
+      - name: Build release APK and AAB
         env:
           APPOTHEK_KEYSTORE_FILE: ${{ runner.temp }}/appothek.jks
           APPOTHEK_KEYSTORE_PASSWORD: ${{ secrets.APPOTHEK_KEYSTORE_PASSWORD }}
           APPOTHEK_KEY_ALIAS: ${{ secrets.APPOTHEK_KEY_ALIAS }}
           APPOTHEK_KEY_PASSWORD: ${{ secrets.APPOTHEK_KEY_PASSWORD }}
-        run: ./gradlew test assembleRelease bundleRelease -PversionName=${{ steps.version.outputs.name }}
+        run: ./gradlew assembleRelease bundleRelease -PversionName=${{ steps.version.outputs.name }}
 
       - name: Attach APK and AAB to the release
         env:

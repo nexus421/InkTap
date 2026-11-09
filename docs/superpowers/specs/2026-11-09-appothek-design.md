@@ -297,7 +297,8 @@ InkTap bleiben wie bisher ausgeschlossen. Die Backup-Regeln aus InkTap werden en
 - Startversion `1.0.0` (versionCode 10000 > 11). Die Appothek ist ein neues Produkt, deshalb wird die Nummerierung
   des Buchstabierers (7.0) nicht fortgesetzt.
 - „Ja“ im Umsteiger-Hinweis legt per Systemdialog ein Buchstabierer-Symbol auf den Startbildschirm.
-- Die Filter für die Wortliste: 4 bis 12 Buchstaben, gebeugte Formen raus, Sperrliste, unter 200.000 Wörter.
+- Die Filter für die Wortliste: nur Substantive mit 4 bis 10 Buchstaben (statt anfangs geplant 4 bis 12, das ergab 277.000 Wörter), gebeugte Formen raus, Sperrliste auch für zusammengesetzte Wörter. Ergebnis 135.677 Wörter.
+- Eigene Symbole einschalten (Kachel oder Einstellungen) legt nur den Eintrag im App-Drawer an. Den Dialog zum Anheften auf den Startbildschirm gibt es nur im einmaligen Umsteiger-Hinweis.
 - Die App-Shortcuts (langer Druck auf das Appothek-Symbol) öffnen ein Tool wie eine eigene App, also genauso wie
   sein eigenes Launcher-Symbol.
 - Die Design-Einstellung (System, Hell, Dunkel) gilt auch innerhalb der Tools. Dynamische Farben (Material You)

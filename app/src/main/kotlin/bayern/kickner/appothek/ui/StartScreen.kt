@@ -31,7 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import bayern.kickner.appothek.LauncherEntries
 import bayern.kickner.appothek.R
-import bayern.kickner.appothek.Shortcuts
 import bayern.kickner.appothek.core.ThemeMode
 import bayern.kickner.appothek.core.Tool
 import bayern.kickner.appothek.core.ToolAvailability
@@ -55,9 +54,9 @@ fun StartScreen(
     // Bumped after a launcher icon was switched, so cards and switches read the new state.
     var iconRevision by remember { mutableIntStateOf(0) }
 
+    // Only the drawer entry; the homescreen pin is offered once, in the migration hint.
     fun setOwnIcon(tool: Tool, enabled: Boolean) {
         LauncherEntries.setEnabled(context, tool, enabled)
-        if (enabled) Shortcuts.requestPin(context, tool)
         iconRevision++
     }
 
@@ -83,12 +82,12 @@ fun StartScreen(
         ) {
             items(tools, key = { it.id }) { tool ->
                 val availability = tool.availability(context)
-                val ownIcon = remember(iconRevision) { LauncherEntries.isEnabled(context, tool.id) }
                 ToolCard(
                     tool = tool,
                     dark = dark,
                     available = availability == ToolAvailability.Available,
-                    ownIcon = ownIcon,
+                    // Read when the menu opens: the migration hint may have changed it from outside this screen.
+                    isOwnIcon = { LauncherEntries.isEnabled(context, tool.id) },
                     onClick = {
                         if (availability is ToolAvailability.Unavailable) {
                             scope.launch { snackbar.showSnackbar(context.getString(availability.reasonRes)) }
@@ -96,7 +95,7 @@ fun StartScreen(
                             onOpen(tool)
                         }
                     },
-                    onToggleOwnIcon = { setOwnIcon(tool, !ownIcon) },
+                    onToggleOwnIcon = { setOwnIcon(tool, !LauncherEntries.isEnabled(context, tool.id)) },
                 )
             }
         }
