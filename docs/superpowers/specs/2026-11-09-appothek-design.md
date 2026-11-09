@@ -235,18 +235,11 @@ unklarer Lizenz landet, werden sie ersetzt:
   Projektseite Public Domain. Beim Herunterladen wird die Lizenzangabe im Archiv selbst geprüft und mit Version bzw.
   Datum im Repo festgehalten. Die Quelle wird unter „Über die Appothek“ und im README genannt, auch wenn Public
   Domain das nicht verlangt.
-- **Gekürzt per Skript im Repo** (z. B. `tools/buchstabierer/wordlist/`), damit sich die Liste jederzeit
-  reproduzierbar neu erzeugen lässt. Ins Repo und in die App kommt nur das Ergebnis. Filter:
-  1. Nur Buchstaben inkl. Umlaute und ß, keine Ziffern, Bindestriche, Apostrophe oder Leerzeichen.
-  2. Länge 4 bis 12 Buchstaben. Kürzere Wörter sind zu leicht, längere zu mühsam zum Buchstabieren.
-  3. Gebeugte Formen entfernen: Ein Wort fällt weg, wenn es ohne eine typische Endung (`s`, `es`, `n`, `en`, `e`,
-     `er`, `ern`, `em`) ebenfalls in der Liste steht. Aus „Aachen, Aacheners, Aachens“ bleibt so „Aachen“.
-  4. Eine Sperrliste mit beleidigenden, vulgären und anstößigen Wörtern. Eine Zufallsfunktion darf so etwas nicht
-     ausspucken.
-  5. Keine Wörter in Großbuchstaben (Abkürzungen).
-- **Ziel:** deutlich unter 200.000 Wörter bzw. wenige MB, in einer einzigen Datei. Wie das Tool daraus ein
-  Zufallswort zieht (alles laden oder gezielt eine Zeile lesen), entscheidet der Builder. Die heutige Aufteilung in
-  fünf Dateien ist nicht mehr nötig.
+- **Gekürzt per Skript im Repo** (`tools/buchstabierer/wordlist/`), damit sich die Liste jederzeit
+  reproduzierbar neu erzeugen lässt. Ins Repo und in die App kommt nur das Ergebnis. Die genauen Filter stehen in
+  `tools/buchstabierer/wordlist/SOURCE.md`: nur Substantive aus Buchstaben, 4 bis 10 Buchstaben, keine gebeugten
+  Formen, keine Genitive auf „-ens“, eine Sperrliste für beleidigende, vulgäre und anstößige Wörter.
+- **Ergebnis:** 135.764 Wörter, 1,36 MB, eine einzige Datei. Die Liste wird einmal pro Prozess geladen.
 - Die Option „Zufallswort“ bleibt in den Einstellungen erhalten (gespeicherter Wert `RANDOM_WORD`).
 
 Backups: Die Daten des Buchstabierers werden wie bisher von Android gesichert (`allowBackup`). Die Eingaben von
