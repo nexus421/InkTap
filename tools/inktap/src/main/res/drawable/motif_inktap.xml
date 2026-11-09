@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- E-paper tag with a QR code and NFC waves, for the start screen card and the launcher icon. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:fillColor="#00000000"
+        android:pathData="M30,38 L62,38 Q66,38 66,42 L66,68 Q66,72 62,72 L30,72 Q26,72 26,68 L26,42 Q26,38 30,38 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M32,44 h9 v9 h-9 Z M51,44 h9 v9 h-9 Z M32,58 h9 v9 h-9 Z M46,56 h5 v5 h-5 Z M53,62 h7 v5 h-7 Z" />
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M72,46 C76,51 76,59 72,64 M79,41 C86,49 86,61 79,69" />
+</vector>

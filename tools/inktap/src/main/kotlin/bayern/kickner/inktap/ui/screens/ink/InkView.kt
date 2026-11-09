@@ -77,6 +77,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import bayern.kickner.inktap.R
 import bayern.kickner.inktap.core.BarcodeFormat
 import bayern.kickner.inktap.core.Content
@@ -100,7 +101,7 @@ private val PREVIEW_MAX_HEIGHT = 200.dp
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InkView(state: InkState, onAction: (InkAction) -> Unit, onOpenNfcSettings: () -> Unit) {
+fun InkView(state: InkState, onAction: (InkAction) -> Unit, onOpenNfcSettings: () -> Unit, onBack: (() -> Unit)? = null) {
     val haptic = LocalHapticFeedback.current
     LaunchedEffect(state.nfc) {
         when (state.nfc) {
@@ -114,6 +115,13 @@ fun InkView(state: InkState, onAction: (InkAction) -> Unit, onOpenNfcSettings: (
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.inktap_name), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                navigationIcon = {
+                    if (onBack != null) {
+                        IconButton(onClick = onBack) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                        }
+                    }
+                },
                 actions = {
                     PanelSwitch(state.panel) { onAction(InkAction.SelectPanel(it)) }
                     OverflowMenu(state.rotate180, onAction)

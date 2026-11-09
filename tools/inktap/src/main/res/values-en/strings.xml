@@ -51,4 +51,7 @@
     <string name="nfc_missing">This phone has no NFC. The preview still works.</string>
 
     <string name="picture_failed">The picture could not be loaded.</string>
+    <string name="back">Back</string>
+    <string name="inktap_no_nfc">Your phone has no NFC.</string>
+    <string name="inktap_description">QR codes and text on e-paper</string>
 </resources>
