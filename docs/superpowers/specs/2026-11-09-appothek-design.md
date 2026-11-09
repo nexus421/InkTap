@@ -239,7 +239,7 @@ unklarer Lizenz landet, werden sie ersetzt:
   reproduzierbar neu erzeugen lässt. Ins Repo und in die App kommt nur das Ergebnis. Die genauen Filter stehen in
   `tools/buchstabierer/wordlist/SOURCE.md`: nur Substantive aus Buchstaben, 4 bis 10 Buchstaben, keine gebeugten
   Formen, keine Genitive auf „-ens“, eine Sperrliste für beleidigende, vulgäre und anstößige Wörter.
-- **Ergebnis:** 135.764 Wörter, 1,36 MB, eine einzige Datei. Die Liste wird einmal pro Prozess geladen.
+- **Ergebnis:** 135.677 Wörter, 1,36 MB, eine einzige Datei. Die Liste wird einmal pro Prozess geladen.
 - Die Option „Zufallswort“ bleibt in den Einstellungen erhalten (gespeicherter Wert `RANDOM_WORD`).
 
 Backups: Die Daten des Buchstabierers werden wie bisher von Android gesichert (`allowBackup`). Die Eingaben von

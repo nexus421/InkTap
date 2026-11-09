@@ -27,8 +27,8 @@ python3 -m unittest test_build_wordlist.py
 2. Nouns only: capital first letter, lowercase afterwards (drops abbreviations, `MyVideo`, verbs, adjectives).
 3. 4 to 10 letters.
 4. Not ending in `ens` (genitives of nominalised verbs such as `Abbiegens`).
-5. Not on `blocklist.txt` (entries ending in `*` also block words starting with them).
+5. Not on `blocklist.txt`, including inflected forms (exact, prefix `word*`, suffix `*word`, infix `*word*` rules and `!word` exceptions, see the file header).
 6. Inflected forms are dropped when their base form is kept (suffixes `ers ern ens es en er em ns e n s`),
    and `…es` is dropped when `…s` exists.
 
-Result on revision 2187: 135,764 words, 1.36 MB.
+Result on revision 2187: 135,677 words, 1.36 MB.

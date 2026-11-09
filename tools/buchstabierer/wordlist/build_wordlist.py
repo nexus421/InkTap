@@ -17,21 +17,42 @@ MAX_LENGTH = 10
 SUFFIXES = ("ers", "ern", "ens", "es", "en", "er", "em", "ns", "e", "n", "s")
 
 
-def is_blocked(word: str, exact: set[str], prefixes: tuple[str, ...]) -> bool:
-    lower = word.lower()
-    return lower in exact or lower.startswith(prefixes)
+class Blocklist:
+    """Entries are lowercase. `word` blocks exactly that word (and its inflected forms), `word*` every word starting
+    with it, `*word` every word ending with it, `*word*` every word containing it. `!word` allows words ending with
+    it again, for harmless words a suffix or infix rule would hit ("Barsch" against `*arsch`)."""
+
+    def __init__(self, entries: set[str]):
+        self.allowed = tuple(e[1:] for e in entries if e.startswith("!"))
+        rules = [e for e in entries if not e.startswith("!")]
+        self.contains = tuple(e[1:-1] for e in rules if e.startswith("*") and e.endswith("*") and len(e) > 2)
+        self.suffixes = tuple(e[1:] for e in rules if e.startswith("*") and not e.endswith("*"))
+        self.prefixes = tuple(e[:-1] for e in rules if e.endswith("*") and not e.startswith("*"))
+        self.exact = {e for e in rules if "*" not in e}
+
+    def blocks(self, word: str) -> bool:
+        """True for a blocked word and for inflected forms of it ("Sexes", "Dorfhuren")."""
+        lower = word.lower()
+        if lower not in self.exact and lower.endswith(self.allowed):
+            return False
+        stems = [lower] + [lower[: -len(s)] for s in SUFFIXES if lower.endswith(s) and len(lower) > len(s)]
+        return any(self._blocks_stem(stem) for stem in stems)
+
+    def _blocks_stem(self, lower: str) -> bool:
+        if lower in self.exact:
+            return True
+        if lower.endswith(self.allowed):
+            return False
+        return lower.startswith(self.prefixes) or lower.endswith(self.suffixes) or any(c in lower for c in self.contains)
 
 
 def filter_words(words: Iterable[str], blocklist: set[str]) -> list[str]:
     """Keeps nouns of 4 to 10 letters, drops blocklisted words and inflected forms of words that are kept.
 
     Nouns are words with a capital first letter and only lowercase letters after it. Words ending in "ens" are
-    almost always genitives of nominalised verbs ("Abbiegens") and are dropped.
-
-    Blocklist entries are lowercase. An entry ending in `*` also blocks every word starting with it.
+    almost always genitives of nominalised verbs ("Abbiegens") and are dropped. See [Blocklist] for its syntax.
     """
-    exact = {entry for entry in blocklist if not entry.endswith("*")}
-    prefixes = tuple(entry[:-1] for entry in blocklist if entry.endswith("*"))
+    blocked = Blocklist(blocklist)
     candidates = {
         word
         for word in (w.strip() for w in words)
@@ -40,7 +61,7 @@ def filter_words(words: Iterable[str], blocklist: set[str]) -> list[str]:
         and word[1:].islower()
         and not word.endswith("ens")
         and MIN_LENGTH <= len(word) <= MAX_LENGTH
-        and not is_blocked(word, exact, prefixes)
+        and not blocked.blocks(word)
     }
 
     def inflected(word: str) -> bool:

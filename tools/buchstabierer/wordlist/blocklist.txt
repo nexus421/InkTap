@@ -1,6 +1,29 @@
 # Words the random-word feature must never show: insults, vulgar and sexual terms, slurs.
-# One entry per line, lowercase. An entry ending in * also blocks every word that starts with it.
-# Compounds where the bad word is not at the start (e.g. "Riesenarsch") are not caught, add them explicitly.
+# One entry per line, lowercase. Syntax (see Blocklist in build_wordlist.py):
+#   word     exactly this word and its inflected forms
+#   word*    every word starting with it
+#   *word    every word ending with it
+#   *word*   every word containing it
+#   !word    allow words ending with it again (harmless words a *word or *word* rule would hit)
+# Compounds
+*arsch
+!barsch
+!marsch
+*fick*
+*fotze*
+*hure
+*möse
+!klemmöse
+*neger*
+*nutte*
+*porno*
+*schlampe
+!tischlampe
+*spast
+!paste
+*sperma*
+*titte*
+# Words and their compounds at the start
 analsex*
 arsch*
 assi

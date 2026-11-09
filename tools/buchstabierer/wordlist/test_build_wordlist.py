@@ -40,6 +40,24 @@ class FilterWordsTest(unittest.TestCase):
     def test_long_genitive_is_dropped_when_short_one_exists(self):
         self.assertEqual(self.run_filter(["Abschnittes", "Abschnitts"]), ["Abschnitts"])
 
+    def test_infix_entry_blocks_compounds(self):
+        self.assertEqual(self.run_filter(["Dreckfotze", "Fotzen", "Haus"], blocklist=["*fotze*"]), ["Haus"])
+
+    def test_suffix_entry_with_exceptions(self):
+        self.assertEqual(
+            self.run_filter(["Riesenarsch", "Barsch", "Seebarsch", "Marsch"], blocklist=["*arsch", "!barsch", "!marsch"]),
+            ["Barsch", "Marsch", "Seebarsch"],
+        )
+
+    def test_inflected_forms_of_blocked_words_are_blocked(self):
+        self.assertEqual(self.run_filter(["Sexes", "Haus"], blocklist=["sex"]), ["Haus"])
+
+    def test_inflected_forms_of_suffix_rule_words_are_blocked(self):
+        self.assertEqual(self.run_filter(["Dorfhuren", "Haus"], blocklist=["*hure"]), ["Haus"])
+
+    def test_exception_also_protects_the_inflection_check(self):
+        self.assertEqual(self.run_filter(["Basispaste", "Vollspast"], blocklist=["*spast", "!paste"]), ["Basispaste"])
+
     def test_umlauts_and_eszett_are_letters(self):
         self.assertEqual(self.run_filter(["Ärger", "Straße"]), ["Straße", "Ärger"])
 
