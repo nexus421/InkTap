@@ -33,3 +33,4 @@ rootProject.name = "Appothek"
 include(":app")
 include(":core")
 include(":tools:inktap")
+include(":tools:buchstabierer")

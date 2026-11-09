@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- "A b c" motif for the start screen card and the launcher icon. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- A -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M30,72 L41,36 L49,36 L60,72 L52,72 L49.6,63 L40.4,63 L38,72 Z M42.2,56.5 L47.8,56.5 L45,46 Z" />
+    <!-- b -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M62,40 L69,40 L69,53 C71,50.8 73.6,50 76,50 C81.5,50 85,54.6 85,61.5 C85,68.4 81.5,73 76,73 C73.4,73 71,72 69,69.6 L69,72 L62,72 Z M73.8,56.2 C71,56.2 69,58.4 69,61.5 C69,64.6 71,66.8 73.8,66.8 C76.6,66.8 78.4,64.6 78.4,61.5 C78.4,58.4 76.6,56.2 73.8,56.2 Z" />
+</vector>

@@ -1,0 +1,28 @@
+<resources>
+    <string name="buchstabierer_name">Buchstabierer</string>
+    <string name="buchstabierer_description">Anton, Berta, Cäsar …</string>
+    <string name="back">Zurück</string>
+    <string name="quiz">Quiz</string>
+    <string name="edit_custom">Eigene Tafel bearbeiten</string>
+    <string name="clear_input">Eingabe löschen</string>
+    <string name="input">Eingabe</string>
+    <string name="hold_to_save">Zum Speichern gedrückt halten</string>
+    <string name="loading_data">Lade Daten...</string>
+    <string name="settings">Einstellungen</string>
+    <string name="show_dev_stuff">Dev Infos anzeigen</string>
+    <string name="hint_change_settings">Änderungen werden erst mit einer Textänderung aktiv</string>
+    <string name="enter_name">Name eingeben</string>
+    <string name="name">Name</string>
+    <string name="fam_guy">FamGuy</string>
+    <string name="international">International</string>
+    <string name="random_words">Zufallsworte</string>
+    <string name="default_din">Standard - DIN 5009</string>
+    <string name="din_5009">DIN 5009 (seit 2022)</string>
+    <string name="save">Speichern</string>
+    <string name="custom">Eigene Tafel</string>
+    <string name="name_is_required">Name ist erforderlich!</string>
+    <string name="fav_1">Fav 1</string>
+    <string name="fav_2">Fav 2</string>
+    <string name="fav_3">Fav 3</string>
+    <string name="fav_4">Fav 4</string>
+</resources>
