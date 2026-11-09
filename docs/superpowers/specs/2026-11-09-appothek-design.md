@@ -102,7 +102,7 @@ interface Tool {
     val description: String           // eine Zeile, z. B. "Anton, Berta, Cäsar…"
     val colors: ToolColors            // Verlauf hell + dunkel
     val motif: ImageVector            // großes Motiv im Kartenhintergrund
-    fun availability(context: Context): ToolAvailability   // Available | Unavailable(Grund) | NeedsSetup(Grund, Aktion)
+    fun availability(context: Context): ToolAvailability   // Available | Unavailable(Grund); „NFC aus“ behandelt das Tool selbst
     @Composable fun Content()
 }
 ```
@@ -309,4 +309,4 @@ InkTap bleiben wie bisher ausgeschlossen. Die Backup-Regeln aus InkTap werden en
   sein eigenes Launcher-Symbol.
 - Die Design-Einstellung (System, Hell, Dunkel) gilt auch innerhalb der Tools. Dynamische Farben (Material You)
   gibt es nicht, weil jedes Tool seine feste Farbe hat.
-- Die App-Sprache ist Deutsch. Englisch kommt höchstens später dazu.
+- Die App-Sprache ist Deutsch. Die Appothek-Oberfläche bekommt wie InkTap (hat schon `values-en`) zusätzlich Englisch, der Buchstabierer bleibt rein deutsch, weil er deutsche Buchstabiertafeln erklärt.
