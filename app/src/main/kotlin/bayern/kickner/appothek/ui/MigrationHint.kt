@@ -13,9 +13,9 @@ import bayern.kickner.appothek.core.Tool
 fun MigrationHint(tool: Tool, onAnswer: (Boolean) -> Unit) {
     AlertDialog(
         onDismissRequest = {},
-        title = { Text(stringResource(R.string.migration_title, stringResource(tool.nameRes))) },
-        text = { Text(stringResource(R.string.migration_text)) },
-        confirmButton = { TextButton(onClick = { onAnswer(true) }) { Text(stringResource(R.string.yes)) } },
-        dismissButton = { TextButton(onClick = { onAnswer(false) }) { Text(stringResource(R.string.no)) } },
+        title = { Text(stringResource(R.string.appothek_migration_title, stringResource(tool.nameRes))) },
+        text = { Text(stringResource(R.string.appothek_migration_text)) },
+        confirmButton = { TextButton(onClick = { onAnswer(true) }) { Text(stringResource(R.string.appothek_yes)) } },
+        dismissButton = { TextButton(onClick = { onAnswer(false) }) { Text(stringResource(R.string.appothek_no)) } },
     )
 }

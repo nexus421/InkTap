@@ -85,7 +85,7 @@ fun ToolCard(
         }
         DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
             DropdownMenuItem(
-                text = { Text(stringResource(if (ownIcon) R.string.own_icon_remove else R.string.own_icon_add)) },
+                text = { Text(stringResource(if (ownIcon) R.string.appothek_own_icon_remove else R.string.appothek_own_icon_add)) },
                 onClick = {
                     menu = false
                     onToggleOwnIcon()

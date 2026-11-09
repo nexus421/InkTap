@@ -118,7 +118,7 @@ fun InkView(state: InkState, onAction: (InkAction) -> Unit, onOpenNfcSettings: (
                 navigationIcon = {
                     if (onBack != null) {
                         IconButton(onClick = onBack) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.inktap_back))
                         }
                     }
                 },

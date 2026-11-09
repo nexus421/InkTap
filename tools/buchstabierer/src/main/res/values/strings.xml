@@ -1,7 +1,7 @@
 <resources>
     <string name="buchstabierer_name">Buchstabierer</string>
     <string name="buchstabierer_description">Anton, Berta, Cäsar …</string>
-    <string name="back">Zurück</string>
+    <string name="buchstabierer_back">Zurück</string>
     <string name="quiz">Quiz</string>
     <string name="edit_custom">Eigene Tafel bearbeiten</string>
     <string name="clear_input">Eingabe löschen</string>

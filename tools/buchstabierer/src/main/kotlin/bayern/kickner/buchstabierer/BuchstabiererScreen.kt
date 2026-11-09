@@ -173,7 +173,7 @@ private fun Header(vm: BuchstabiererViewModel, onBack: (() -> Unit)?) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         if (onBack != null) {
             IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.buchstabierer_back))
             }
         }
         Text(

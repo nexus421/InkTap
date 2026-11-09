@@ -43,10 +43,10 @@ fun AboutScreen(onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.about)) },
+                title = { Text(stringResource(R.string.appothek_about)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.appothek_back))
                     }
                 },
             )
@@ -60,11 +60,11 @@ fun AboutScreen(onBack: () -> Unit) {
         ) {
             ListItem(
                 headlineContent = { Text(stringResource(R.string.app_name)) },
-                supportingContent = { Text(stringResource(R.string.version, version ?: "")) },
+                supportingContent = { Text(stringResource(R.string.appothek_version, version ?: "")) },
             )
             HorizontalDivider()
             Text(
-                stringResource(R.string.licences),
+                stringResource(R.string.appothek_licences),
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 4.dp),
             )
             credits.forEach { ListItem(headlineContent = { Text(it.name) }, supportingContent = { Text(it.detail) }) }

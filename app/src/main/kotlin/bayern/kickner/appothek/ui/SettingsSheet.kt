@@ -47,14 +47,14 @@ fun SettingsSheet(
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(Modifier.padding(bottom = 24.dp)) {
             Text(
-                stringResource(R.string.design),
+                stringResource(R.string.appothek_design),
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
             )
             val labels = mapOf(
-                ThemeMode.SYSTEM to R.string.theme_system,
-                ThemeMode.LIGHT to R.string.theme_light,
-                ThemeMode.DARK to R.string.theme_dark,
+                ThemeMode.SYSTEM to R.string.appothek_theme_system,
+                ThemeMode.LIGHT to R.string.appothek_theme_light,
+                ThemeMode.DARK to R.string.appothek_theme_dark,
             )
             SingleChoiceSegmentedButtonRow(
                 Modifier
@@ -71,7 +71,7 @@ fun SettingsSheet(
             }
 
             Text(
-                stringResource(R.string.own_icons),
+                stringResource(R.string.appothek_own_icons),
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 4.dp),
             )
@@ -96,7 +96,7 @@ fun SettingsSheet(
             HorizontalDivider(Modifier.padding(vertical = 8.dp))
             ListItem(
                 colors = transparent,
-                headlineContent = { Text(stringResource(R.string.about)) },
+                headlineContent = { Text(stringResource(R.string.appothek_about)) },
                 trailingContent = { Icon(Icons.AutoMirrored.Outlined.KeyboardArrowRight, contentDescription = null) },
                 modifier = Modifier
                     .padding(horizontal = 8.dp)

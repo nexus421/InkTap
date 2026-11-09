@@ -67,7 +67,7 @@ fun StartScreen(
                 title = { Text(stringResource(R.string.app_name), fontWeight = FontWeight.Bold) },
                 actions = {
                     IconButton(onClick = { showSettings = true }) {
-                        Icon(Icons.Outlined.Settings, contentDescription = stringResource(R.string.settings))
+                        Icon(Icons.Outlined.Settings, contentDescription = stringResource(R.string.appothek_settings))
                     }
                 },
             )
